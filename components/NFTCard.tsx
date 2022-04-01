@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react'
 import { BiHeart } from 'react-icons/bi'
 
 interface INFTCardProps {
+  collectionId?:string
   nftItem?: NFTMetadata
   listings?: (AuctionListing | DirectListing)[]
   title?: string
@@ -30,7 +31,7 @@ const style = {
   likeIcon: `text-xl mr-2`,
 }
 
-const NFTCard = ({ nftItem, title, listings }: INFTCardProps) => {
+const NFTCard = ({ nftItem, title, listings, collectionId }: INFTCardProps) => {
   const router = useRouter()
   const [isListed, setIsListed] = useState(false)
   const [price, setPrice] = useState('0')
@@ -40,7 +41,6 @@ const NFTCard = ({ nftItem, title, listings }: INFTCardProps) => {
     const listing = listings.find(
       (listing) => listing.asset.id.toString() === nftItem?.id.toString()
     )
-    console.log(listing)
     if (listing) {
       setIsListed(true)
       setPrice(listing.buyoutCurrencyValuePerToken.displayValue)
@@ -52,13 +52,17 @@ const NFTCard = ({ nftItem, title, listings }: INFTCardProps) => {
       className={style.wrapper}
       onClick={() => {
         router.push({
-          pathname: '/assets/${nftItem.id}',
-          query: { isListed },
+          pathname: `/nfts/${nftItem?.id}`,
+          query: { isListed, collectionId },
         })
       }}
     >
       <div className={style.imgContainer}>
-        <img className={style.nftImg} src={nftItem?.image} alt={nftItem?.name} />
+        <img
+          className={style.nftImg}
+          src={nftItem?.image}
+          alt={nftItem?.name}
+        />
       </div>
       <div className={style.details}>
         <div className={style.info}>

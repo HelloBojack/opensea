@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useMarketplace, useNFTCollection } from '@thirdweb-dev/react'
 import {
   AuctionListing,
@@ -60,9 +60,10 @@ const Collection = () => {
   const fetchCollectionData = async () => {
     const query = `*[_type=="marketItems" && contractAddress == "${collectionId}" ] { title, contractAddress, description, createdBy, "creator":createdBy->userName, volumeTraded, floorPrice, "allOwners":owners[]->, "profileImage":profileImage.asset->url, "bannerImage":bannerImage.asset->url }`
     const collectionData = await client.fetch(query)
-    await setCollection(collectionData[0])
+    setCollection(collectionData[0])
   }
 
+  // get all nfts in collection
   useEffect(() => {
     if (nftCollection) {
       ;(async () => {
@@ -72,6 +73,7 @@ const Collection = () => {
     }
   }, [nftCollection])
 
+  // get all listings in collection
   useEffect(() => {
     if (marketplace) {
       ;(async () => {
@@ -81,6 +83,7 @@ const Collection = () => {
     }
   }, [marketplace])
 
+  // fetch collection data in my sanity database
   useEffect(() => {
     fetchCollectionData()
   }, [collectionId])
@@ -178,6 +181,7 @@ const Collection = () => {
           {nfts?.map((nftItem, id) => (
             <NFTCard
               key={id}
+              collectionId={collectionId as string}
               nftItem={nftItem.metadata}
               title={collection?.title}
               listings={listings}
