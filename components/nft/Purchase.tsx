@@ -8,6 +8,7 @@ import type {
   Marketplace,
   NFTMetadata,
 } from '@thirdweb-dev/sdk'
+import { useAddress } from '@thirdweb-dev/react'
 
 interface IPurchaseProps {
   isListed?: string
@@ -32,12 +33,11 @@ const Purchase = ({
   listings,
   marketplace,
 }: IPurchaseProps) => {
+  const address = useAddress()
   const [selectedMarketNFT, setSelectedMarketNFT] = useState<
     AuctionListing | DirectListing
   >()
   const [enableBtn, setEnableBtn] = useState(false)
-
-  console.log(isListed)
 
   useEffect(() => {
     if (!listings || !isListed) return
@@ -65,7 +65,17 @@ const Purchase = ({
     listingId = selectedMarketNFT?.id,
     quantitiyDesired = 1
   ) => {
-    await marketplace?.buyoutListing(listingId as string, quantitiyDesired)
+    console.log('buying')
+
+    // console.log(marketplace?.direct.buyoutListing)
+    console.log(address)
+
+    let result = await marketplace?.direct.buyoutListing(
+      listingId as string,
+      quantitiyDesired
+    )
+    console.log(result)
+
     confirmPurchase()
   }
 
@@ -76,9 +86,7 @@ const Purchase = ({
         <>
           <div
             className={style.button + style.buyButton}
-            onClick={() => {
-              enableBtn ?? buyItem(selectedMarketNFT?.id, 1)
-            }}
+            onClick={() => (enableBtn ? buyItem(selectedMarketNFT?.id, 1) : '')}
           >
             <IoMdWallet className={style.buttonIcon} />
             <div className={style.buttonText}>Buy Now</div>
