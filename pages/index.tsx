@@ -1,4 +1,4 @@
-import { useWeb3 } from '@3rdweb/hooks'
+import { useAddress, useDisconnect, useMetamask } from '@thirdweb-dev/react'
 import type { NextPage } from 'next'
 import { useEffect } from 'react'
 import { client } from '../lib/sanityClient'
@@ -14,10 +14,10 @@ const style = {
 }
 
 const Home: NextPage = () => {
-  const { address, connectWallet } = useWeb3()
+  const connectWithMetamask = useMetamask()
+  const address = useAddress()
 
   const welcomeUser = (userName: string) => {
-    console.log(userName)
     toast.success(
       `Welcome back${userName !== 'Unnamed' ? ` ${userName}` : ''}!`,
       {
@@ -33,10 +33,10 @@ const Home: NextPage = () => {
     if (!address) return
     ;(async () => {
       const userDoc = {
-        _type: 'user',
+        _type: 'users',
         _id: address,
         userName: 'Unnamed',
-        userAddress: address,
+        walletAddress: address,
       }
       const result = await client.createIfNotExists(userDoc)
       welcomeUser(result.userName)
@@ -53,10 +53,7 @@ const Home: NextPage = () => {
         </>
       ) : (
         <div className={style.walletConnectWrapper}>
-          <button
-            className={style.button}
-            onClick={() => connectWallet('injected')}
-          >
+          <button className={style.button} onClick={connectWithMetamask}>
             Connect Wallect
           </button>
           <div className={style.details}>
