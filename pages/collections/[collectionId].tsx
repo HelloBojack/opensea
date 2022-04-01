@@ -46,7 +46,7 @@ const style = {
   statName: `text-lg w-full text-center mt-1`,
   description: `w-[44vw] text-[#8a939b] text-xl w-max-1/4 flex-wrap mt-4`,
 }
-const marketplaceAddress = '0x86A93125FECc3Ffa8543CF1F7b60b79723524CCd'
+export const marketplaceAddress = '0x86A93125FECc3Ffa8543CF1F7b60b79723524CCd'
 
 const Collection = () => {
   const router = useRouter()

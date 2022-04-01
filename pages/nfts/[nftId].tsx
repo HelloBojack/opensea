@@ -1,11 +1,17 @@
 import Header from '../../components/Header'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import type { NFTMetadata } from '@thirdweb-dev/sdk'
-import { useNFTCollection } from '@thirdweb-dev/react'
+import type {
+  AuctionListing,
+  DirectListing,
+  NFTMetadata,
+} from '@thirdweb-dev/sdk'
+import { useMarketplace, useNFTCollection } from '@thirdweb-dev/react'
 import NFTImage from '../../components/nft/NFTImage'
 import GeneralDetail from '../../components/nft/GeneralDetail'
 import ItemActivity from '../../components/nft/ItemActivity'
+import Purchase from '../../components/nft/Purchase'
+import { marketplaceAddress } from '../collections/[collectionId]'
 
 const style = {
   wrapper: `flex flex-col items-center container-lg text-[#e5e8eb]`,
@@ -17,10 +23,22 @@ const style = {
 
 const NFT = () => {
   const router = useRouter()
-  const { nftId, collectionId } = router.query
+  const { nftId, collectionId, isListed } = router.query
 
+  const [listings, setListings] = useState<(AuctionListing | DirectListing)[]>()
   const [selectedNFT, setSelectedNFT] = useState<NFTMetadata>()
   const nftCollection = useNFTCollection(collectionId as string)
+  const marketplace = useMarketplace(marketplaceAddress)
+
+  // get all listings in collection
+  useEffect(() => {
+    if (marketplace) {
+      ;(async () => {
+        const listings = await marketplace.getAllListings()
+        setListings(listings)
+      })()
+    }
+  }, [marketplace])
 
   // get all nfts in collection & setSelectedNFT
   useEffect(() => {
@@ -45,10 +63,19 @@ const NFT = () => {
               <NFTImage selectedNFT={selectedNFT} />
             </div>
             <div className={style.detailsContainer}>
-              <GeneralDetail selectedNFT={selectedNFT} nftCollection={nftCollection}/>
+              <GeneralDetail
+                selectedNFT={selectedNFT}
+                nftCollection={nftCollection}
+              />
+              <Purchase
+                isListed={isListed as string}
+                selectedNFT={selectedNFT}
+                listings={listings}
+                marketplace={marketplace}
+              />
             </div>
           </div>
-          <ItemActivity/>
+          <ItemActivity />
         </div>
       </div>
     </>
