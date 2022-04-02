@@ -18,7 +18,7 @@ const style = {
   container: `container p-6`,
   topContent: `flex`,
   nftImgContainer: `flex-1 mr-4`,
-  detailsContainer: `flex-[2] ml-4`,
+  detailsContainer: `flex-[2] ml-4 flex justify-between flex-col`,
 }
 
 const NFT = () => {

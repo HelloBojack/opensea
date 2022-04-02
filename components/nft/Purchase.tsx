@@ -65,23 +65,16 @@ const Purchase = ({
     listingId = selectedMarketNFT?.id,
     quantitiyDesired = 1
   ) => {
-    console.log('buying')
-
-    // console.log(marketplace?.direct.buyoutListing)
-    console.log(address)
-
     let result = await marketplace?.direct.buyoutListing(
       listingId as string,
       quantitiyDesired
     )
-    console.log(result)
-
     confirmPurchase()
   }
 
   return (
     <div className={style.wrapper}>
-      <Toaster position="bottom-left" reverseOrder={false} />
+      <Toaster position="top-center" reverseOrder={false} />
       {isListed === 'true' ? (
         <>
           <div

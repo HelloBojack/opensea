@@ -23,7 +23,7 @@ const NFTImage = ({ selectedNFT }: INFTImageProps) => {
           </div>
         </div>
       </div>
-      <img src={selectedNFT?.image} alt="" />
+      <img className="w-full" src={selectedNFT?.image} alt="" />
     </>
   )
 }
